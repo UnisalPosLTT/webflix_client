@@ -5,30 +5,37 @@
             $ano = $_POST["ano"];
             $opcao = $_POST["opcao"];
 
-            $arrayImagem = array(array("url" => $imagem));
+            function postToApi($url, $json){
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type : application/json',
+                    'Cache-Control : no-cache' . strlen($json))
+            );
+                $jsonRet = json_decode(curl_exec($ch));
+                $teste = json_encode($jsonRet);
+                return $teste;
+            }           
 
+            
+
+            $urlImage="https://unisal-webflix-new.herokuapp.com/api/v1/image";
+            $arrayImagem = array("url" => $imagem);
+            $json =  json_encode($arrayImagem);
+            $idImagem=json_decode(postToApi($urlImage,$json))->id;
+
+            $urlFilme="https://unisal-webflix-new.herokuapp.com/api/v1/movie";
+
+            $arrayImagem = array(array("id"=>$idImagem));
             $arrayCategoria = array(array("id" => $opcao));
 
             $array = array("category" => $arrayCategoria,"description" => $descricao, "name" => $nome, "name" => $nome, "images" => $arrayImagem, "publishIn" => $ano);
 
             $json = json_encode($array);
+            $teste=postToApi($urlFilme,$json);        
 
-            $ch = curl_init('https://unisal-webflix-new.herokuapp.com/api/v1/movie');
-            
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-            
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-            
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                
-                'Content-Type : application/json',
-      'Cache-Control : no-cache' . strlen($json))
-            
-            );
-
-            $jsonRet = json_decode(curl_exec($ch));
 
             echo "
             <!doctype html>
@@ -67,7 +74,7 @@
       </div>
     <div class='col-lg-12'>
             <h2>JSON Gerado com Sucesso!</h2>
-            <p>".$json."</p>
+            <p>".$json."<br/>" .$teste."</p>
             <p><a class='btn btn-secondary' href='index.php' role='button'>Voltar »</a></p>
     </div>
     <div class='container marketing'>

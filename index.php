@@ -135,7 +135,7 @@
       						<td>".$description."</td>
       						<td>".$category_name."</td>
       						<td>".$publishIn."</td>
-      						<td><img src='".$images_url."''></td>
+      						<td><img width='210px' src='".$images_url."''></td>
       						<td><button type='button' class='btn btn-dark'>Edit</button></td>
       						<td><button type='button' class='btn btn-danger'>Delete</button></td>
       					</tr>
